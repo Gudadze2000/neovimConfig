@@ -1,4 +1,4 @@
-  return {
+return {
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -15,7 +15,7 @@
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
-    opts = {autoformat = true},
+    opts = { autoformat = true },
     ft = {
       'lua',
       'python',
@@ -44,12 +44,10 @@
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       { 'j-hui/fidget.nvim', event = 'LspAttach', opts = { notification = { override_vim_notify = true } } },
       'hrsh7th/cmp-nvim-lsp',
-    },  
+    },
 
-
-
-config = function()
-        -- Apply the same style to diagnostics float
+    config = function()
+      -- Apply the same style to diagnostics float
       vim.diagnostic.config {
         float = {
           border = 'rounded',
@@ -63,12 +61,12 @@ config = function()
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
-            local map = function(keys, func, desc, mode)
-                mode = mode or 'n'
-                vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc }) 
-            end
+          local map = function(keys, func, desc, mode)
+            mode = mode or 'n'
+            vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+          end
 
-            -- Jump to the definition of the word under your cursor.
+          -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
           map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
@@ -78,7 +76,7 @@ config = function()
 
           -- Jump to the implementation of the word under your cursor.
           --  Useful when your language has ways of declaring types without an actual implementation.
-          map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+          map('<leader>gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
 
           -- Jump to the type of the word under your cursor.
           --  Useful when you're not sure what type a variable is and you want to see
@@ -130,89 +128,81 @@ config = function()
             })
           end
 
-        -- The following code creates a keymap to toggle inlay hints in your
-        -- code, if the language server you are using supports them
-        if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-          map('<leader>th', function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-          end, '[T]oggle Inlay [H]ints')
-        end
-      end,
-    })
-    -- LSP servers and clients are able to communicate to each other what features they support.
-    -- By default, Neovim doesn't support everything that is in the LSP specification.
-    -- When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
-    -- So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+          -- The following code creates a keymap to toggle inlay hints in your
+          -- code, if the language server you are using supports them
+          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+            map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+          end
+        end,
+      })
+      -- LSP servers and clients are able to communicate to each other what features they support.
+      -- By default, Neovim doesn't support everything that is in the LSP specification.
+      -- When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
+      -- So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
-
-     -- Enable the following language servers
+      -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --  See `:help lsp-config` for information about keys and how to configure
-      local servers = {
+      local servers =
+        {
           ts_ls = {},
           ruff = {},
           pylsp = {
-              settings = {
-                  pylsp = {
-                      plugins = {
-                          pyflakes = { enabled = false },
-                          pycodestyle = { enabled = false },
-                          autopep8 = { enabled = false },
-                          yapf = { enabled = false },
-                          mccabe = { enabled = false },
-                          pylsp_mypy = { enabled = false },
-                          pylsp_black = { enabled = false },
-                          pylsp_isort = { enabled = false },
+            settings = {
+              pylsp = {
+                plugins = {
+                  pyflakes = { enabled = false },
+                  pycodestyle = { enabled = false },
+                  autopep8 = { enabled = false },
+                  yapf = { enabled = false },
+                  mccabe = { enabled = false },
+                  pylsp_mypy = { enabled = false },
+                  pylsp_black = { enabled = false },
+                  pylsp_isort = { enabled = false },
+                },
               },
+            },
           },
-      },
+
+          html = { filetypes = { 'html', 'twig', 'hbs' } },
+          cssls = {},
+          tailwindcss = {},
+          dockerls = {},
+          sqlls = {},
+          terraformls = {},
+          jsonls = {},
+          yamlls = {},
+          lua_ls = {},
+        },
+        -- Ensure the servers and tools above are installed
+        --  To check the current status of installed tools and/or manually install
+        --  other tools, you can run
+        --    :Mason
+        --
+        --  You can press `g?` for help in this menu.
+        require('mason').setup()
+
+      -- Ensure the servers and tools are installed
+
+      local ensure_installed = vim.tbl_keys(servers or {})
+      vim.list_extend(ensure_installed, {
+        'lua-language-server',
+        'stylua', -- Used to format Lua code
+      })
+      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+      for server, cfg in pairs(servers) do
+        -- For each LSP server (cfg), we merge:
+        -- 1. A fresh empty table (to avoid mutating capabilities globally)
+        -- 2. Your capabilities object with Neovim + cmp features
+        -- 3. Any server-specific cfg.capabilities if defined in `servers`
+        cfg.capabilities = vim.tbl_deep_extend('force', {}, capabilities, cfg.capabilities or {})
+
+        vim.lsp.config(server, cfg)
+        vim.lsp.enable(server)
+      end
+    end,
   },
-  
-
-  html = { filetypes = { 'html', 'twig', 'hbs' } },
-  cssls = {},
-  tailwindcss = {},
-  dockerls = {},
-  sqlls = {},
-  terraformls = {},
-  jsonls = {},
-  yamlls = {},
-  lua_ls = {},
-
-
-  },
-       -- Ensure the servers and tools above are installed
-      --  To check the current status of installed tools and/or manually install
-      --  other tools, you can run
-      --    :Mason
-      --
-      --  You can press `g?` for help in this menu.
-          require('mason').setup()
-
-      -- Ensure the servers and tools are installed 
-
-        local ensure_installed = vim.tbl_keys(servers or {})
-        vim.list_extend(ensure_installed, {
-            'lua-language-server',
-          'stylua', -- Used to format Lua code
-        })
-        require('mason-tool-installer').setup{ensure_installed = ensure_installed}
-
-        for server, cfg in pairs(servers) do
-          -- For each LSP server (cfg), we merge:
-          -- 1. A fresh empty table (to avoid mutating capabilities globally)
-          -- 2. Your capabilities object with Neovim + cmp features
-          -- 3. Any server-specific cfg.capabilities if defined in `servers`
-          cfg.capabilities = vim.tbl_deep_extend('force', {}, capabilities, cfg.capabilities or {})
-
-          vim.lsp.config(server, cfg)
-          vim.lsp.enable(server)
-        end
-    end
-
-  }
 }
-
-
