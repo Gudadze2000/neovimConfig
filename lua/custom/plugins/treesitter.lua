@@ -2,7 +2,9 @@ return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
   build = ':TSUpdate',
   -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-  opts = {
+  lazy = false,
+  config = function ()
+    require('nvim-treesitter').install{  
     ensure_installed = {
       'lua',
       'python',
@@ -31,11 +33,13 @@ return { -- Highlight, edit, and navigate code
       'css',
       'html',
     },
-    -- Autoinstall languages that are not installed
-    auto_install = true,
-    Highlight = {
-      enable = true,
-    },
-    indent = { enable = true },
-  },
+  }
+  
+  vim.api.nvim_create_autocmd('FileType', {
+    callback = function(args)
+      pcall(vim.treesitter.start, args.buf)
+    end,
+  })
+  end,
+
 }

@@ -15,7 +15,7 @@ return {
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
-    opts = { autoformat = true },
+    opts = { autoformat = false },
     ft = {
       'lua',
       'python',
