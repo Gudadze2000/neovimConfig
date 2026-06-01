@@ -149,6 +149,7 @@ return {
         {
           ts_ls = {},
           ruff = {},
+          eslint = {},
           pylsp = {
             settings = {
               pylsp = {
