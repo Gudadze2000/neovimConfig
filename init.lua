@@ -22,7 +22,7 @@ require('lazy').setup {
   require 'kickstart.plugins.neo-tree',
   require 'custom.plugins.autoformat',
   require 'custom.plugins.colortheme',
-  require 'custom.plugins.liveserver',
+  -- require 'custom.plugins.liveserver',
   require 'custom.plugins.auto-completion',
   require 'custom.plugins.lsp',
   require 'custom.plugins.telescope',
@@ -31,5 +31,6 @@ require('lazy').setup {
   require 'custom.plugins.whichkey',
   require 'custom.plugins.lazygit',
   require 'custom.plugins.lualine',
-  require 'custom.plugins.mini_nvim'
+  require 'custom.plugins.mini_nvim',
+  require 'custom.plugins.smear_cursor'
 }
