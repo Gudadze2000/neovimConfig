@@ -61,4 +61,4 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 
 -- Error keymaps
 vim.keymap.set('n', ']e', function() vim.diagnostic.goto_next { severity = vim.diagnostic.severity.Error } end, { desc = 'Go to [N]ext Error' })
-vim.keymap.set('n', ']e', function() vim.diagnostic.goto_prev { severity = vim.diagnostic.severity.Error } end, { desc = 'Go to [P]revious Error' })
+vim.keymap.set('n', '[e', function() vim.diagnostic.goto_prev { severity = vim.diagnostic.severity.Error } end, { desc = 'Go to [P]revious Error' })

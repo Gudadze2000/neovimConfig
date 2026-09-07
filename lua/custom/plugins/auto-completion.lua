@@ -127,9 +127,9 @@ return { -- Autocompletion
     },
     sources = {
         -- Copilot Source
+        { name = 'nvim_lsp' },
         { name = 'copilot' },
         { name = 'lazydev' },
-        { name = 'nvim_lsp' },
         { name = 'luasnip' },
         { name = 'path' },
       },

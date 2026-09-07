@@ -31,5 +31,6 @@ require('lazy').setup {
   require 'custom.plugins.whichkey',
   require 'custom.plugins.lazygit',
   require 'custom.plugins.lualine',
-  require 'custom.plugins.mini_nvim'
+  require 'custom.plugins.mini_nvim',
+  require 'custom.plugins.markdown'
 }

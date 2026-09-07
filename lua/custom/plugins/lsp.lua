@@ -150,23 +150,7 @@ return {
           ts_ls = {},
           ruff = {},
           eslint = {},
-          pylsp = {
-            settings = {
-              pylsp = {
-                plugins = {
-                  pyflakes = { enabled = false },
-                  pycodestyle = { enabled = false },
-                  autopep8 = { enabled = false },
-                  yapf = { enabled = false },
-                  mccabe = { enabled = false },
-                  pylsp_mypy = { enabled = false },
-                  pylsp_black = { enabled = false },
-                  pylsp_isort = { enabled = false },
-                },
-              },
-            },
-          },
-
+          basedpyright = {},
           html = { filetypes = { 'html', 'twig', 'hbs' } },
           cssls = {},
           tailwindcss = {},
