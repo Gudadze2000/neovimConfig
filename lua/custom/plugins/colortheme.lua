@@ -1,103 +1,102 @@
 return {
-     "catppuccin/nvim", 
-     name = "catppuccin", 
-     priority = 1000,
-     config = function ()
-        require("catppuccin").setup({
-    flavour = "macchiato", -- latte, frappe, macchiato, mocha
-    background = { -- :h background
-        light = "frappe",
-        dark = "macchiato",
-    },
-    transparent_background = false, -- disables setting the background color.
-    float = {
-        transparent = false, -- enable transparent floating windows
-        solid = false, -- use solid styling for floating windows, see |winborder|
-    },
-    show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
-    term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
-    dim_inactive = {
-        enabled = false, -- dims the background color of inactive window
-        shade = "dark",
-        percentage = 0.15, -- percentage of the shade to apply to the inactive window
-    },
-    no_italic = false, -- Force no italic
-    no_bold = false, -- Force no bold
-    no_underline = false, -- Force no underline
-    styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-        comments = { "italic" }, -- Change the style of comments
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    lazy = false,
+    priority = 1000,
+    opts = {
+      flavour = "mocha",
+      transparent_background = false,
+      term_colors = true,
+
+      styles = {
+        comments = { "italic" },
         conditionals = { "italic" },
-        loops = { "italic" },
-        errors = {"undercurl"},
-        functions = {},
         keywords = {},
-        strings = {},
-        variables = {},
-        numbers = {},
-        booleans = {},
-        properties = {},
+        functions = {"italic"},
         types = {},
-        operators = {},
+      },
 
-        -- miscs = {}, -- Uncomment to turn off hard-coded styles
-    },
-    lsp_styles = { -- Handles the style of specific lsp hl groups (see `:h lsp-highlight`).
-        virtual_text = {
-            errors = { "italic" },
-            hints = { "italic" },
-            warnings = { "italic" },
-            information = { "italic" },
-            ok = { "italic" },
-        },
-        underlines = {
-            errors = { "undercurl" },
-            hints = { "underline" },
-            information = { "underline" },
-            ok = { "underline" },
-        },
-        inlay_hints = {
-            background = true,
-        },
-    },
-    color_overrides = {},
-    custom_highlights= function(colors)
-        return {
-            -- Change Variables, Funtions, Keywords and Types to custom colors
-            -- Variables
-      Identifier = { fg = colors.text },
-      ["@variable"] = { fg = colors.text },
-      ["@variable.builtin"] = { fg = colors.flamingo },
-
-      -- Functions
-      Function = { fg = colors.blue },
-      ["@function"] = { fg = colors.blue },
-      ["@function.call"] = { fg = colors.sapphire },
-
-      -- Keywords
-      Keyword = { fg = colors.mauve },
-      ["@keyword"] = { fg = colors.mauve },
-
-      -- Types
-      Type = { fg = colors.yellow },
-      ["@type"] = { fg = colors.yellow },
-        }
-    end,
-    default_integrations = true,
-    auto_integrations = false,
-    integrations = {
+      integrations = {
         cmp = true,
         gitsigns = true,
-        nvimtree = true,
-        notify = false,
-        mini = {
-            enabled = true,
-            indentscope_color = "",
+        treesitter = true,
+        treesitter_context = true,
+        telescope = { enabled = true },
+        mason = true,
+        which_key = true,
+        neotree = true,
+        mini = { enabled = true },
+        indent_blankline = { enabled = true, colored_indent_levels = false },
+        semantic_tokens = true,
+        native_lsp = {
+          enabled = true,
+          underlines = {
+            errors = { "undercurl" },
+            warnings = { "undercurl" },
+            hints = { "underdotted" },
+            information = { "underdotted" },
+          },
         },
-        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
-    },
-})
+      },
 
--- setup must be called before loading
-    vim.cmd.colorscheme('catppuccin')
-     end
+      custom_highlights = function(c)
+        return {
+          -- ── Python: treesitter ──────────────────────────────
+          -- self / cls stand out from regular variables
+          ["@variable.builtin.python"] = { fg = c.red, style = { "italic" } },
+          ["@variable.parameter.python"] = { fg = c.maroon, style = { "italic" } },
+
+          -- decorators (@property, @dataclass, @app.route ...)
+          ["@attribute.python"] = { fg = c.yellow, style = { "italic" } },
+          ["@attribute.builtin.python"] = { fg = c.yellow, style = { "italic" } },
+
+          -- None / True / False
+          ["@constant.builtin.python"] = { fg = c.peach, style = { "bold" } },
+
+          -- docstrings read as documentation, not as plain strings
+          ["@string.documentation.python"] = { fg = c.teal, style = { "italic" } },
+
+          -- built-ins (print, len, range, isinstance ...) vs your own functions
+          ["@function.builtin.python"] = { fg = c.sky },
+          ["@type.builtin.python"] = { fg = c.yellow, style = { "italic" } },
+
+          -- imports and returns
+          ["@keyword.import.python"] = { fg = c.mauve, style = { "italic" } },
+          ["@keyword.return.python"] = { fg = c.mauve, style = { "bold" } },
+          ["@keyword.exception.python"] = { fg = c.red },
+
+          -- f-string braces and escapes
+          ["@punctuation.special.python"] = { fg = c.pink, style = { "bold" } },
+          ["@string.escape.python"] = { fg = c.pink },
+
+          -- methods and constructors
+          ["@function.method.call.python"] = { fg = c.blue },
+          ["@constructor.python"] = { fg = c.sapphire },
+
+          -- ── Python: LSP semantic tokens (basedpyright / pyright) ──
+          ["@lsp.type.selfParameter.python"] = { fg = c.red, style = { "italic" } },
+          ["@lsp.type.clsParameter.python"] = { fg = c.red, style = { "italic" } },
+          ["@lsp.type.decorator.python"] = { fg = c.yellow, style = { "italic" } },
+          ["@lsp.type.class.python"] = { fg = c.yellow },
+          ["@lsp.type.namespace.python"] = { fg = c.lavender },
+          ["@lsp.typemod.variable.readonly.python"] = { fg = c.peach },
+          ["@lsp.mod.deprecated"] = { strikethrough = true },
+
+          -- ── UI polish ───────────────────────────────────────
+          CursorLineNr = { fg = c.mauve, style = { "bold" } },
+          LineNr = { fg = c.surface2 },
+          WinSeparator = { fg = c.surface1 },
+          TreesitterContext = { bg = c.mantle },
+          TreesitterContextLineNumber = { fg = c.mauve, bg = c.mantle },
+          IblIndent = { fg = c.surface0 },
+          IblScope = { fg = c.overlay0 },
+        }
+      end,
+    },
+    config = function(_, opts)
+      require("catppuccin").setup(opts)
+      vim.cmd.colorscheme "catppuccin"
+    end,
+  },
 }

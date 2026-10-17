@@ -1,6 +1,6 @@
 return {
   'nvim-lualine/lualine.nvim',
-  dependencies = { 'nvim-tree/nvim-web-devicons' },
+  dependencies = { 'nvim-tree/nvim-web-devicons', },
 
   config = function()
     require('lualine').setup {
@@ -37,10 +37,20 @@ return {
         },
       },
       sections = {
-        lualine_a = { 'mode' },
+        lualine_a = {
+          { 
+            'mode', icon = ' ',
+            color = function ()
+              if vim.fn.mode() == "i" then
+                return {bg = '#a6e3a1', fg = '#1e1e2e'}
+              end
+                return nil
+            end
+          },
+        },
         lualine_b = { 'branch', 'diff', 'diagnostics' },
         lualine_c = { 'filename' },
-        lualine_x = { 'encoding', 'fileformat', 'filetype' },
+        lualine_x = { 'fileformat', 'filetype' },
         lualine_y = { 'progress' },
         lualine_z = { 'location' },
       },
