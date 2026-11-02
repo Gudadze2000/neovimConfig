@@ -2,8 +2,9 @@ return {
   "sphamba/smear-cursor.nvim",
 
   opts = {
-    -- Smear cursor when switching buffers or windows.
-    smear_between_buffers = true,
+    -- Disabled: closing floats (telescope, lazygit) counts as a window switch
+    -- and leaves a smeared ghost trail from the float's cursor position.
+    smear_between_buffers = false,
 
     -- Smear cursor when moving within line or to neighbor lines.
     -- Use `min_horizontal_distance_smear` and `min_vertical_distance_smear` for finer control
@@ -14,6 +15,8 @@ return {
 
     -- Set to `true` if your font supports legacy computing symbols (block unicode symbols).
     -- Smears and particles will look a lot less blocky.
+    -- Disabled: the sextant/octant glyphs render as stray pixel-like dots
+    -- when the font draws them imperfectly.
     legacy_computing_symbols_support = false,
 
     -- Smear cursor in insert mode.
@@ -23,9 +26,21 @@ return {
 
     smear_to_cmd = false,
 
-    stiffness = 0.9,
-    trailing_stiffness = 0.3,
-    distance_stop_animating = 0.2,
 
+    stiffness = 0.85,
+    trailing_stiffness = 0.3,
+
+
+    -- Prevent smearing on small vertical movements
+    min_vertical_distance_smear = 3,
+
+    -- Stop the animation sooner
+    distance_stop_animating = 0.3,
+
+    -- Shorter smear trail
+    max_length = 10.0,
+
+    -- Faster redraws
+    time_interval = 10,
   },
 }

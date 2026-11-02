@@ -35,7 +35,7 @@ return {
             errors = { "undercurl" },
             warnings = { "undercurl" },
             hints = { "underdotted" },
-            information = { "underdotted" },
+            information = {},
           },
         },
       },
